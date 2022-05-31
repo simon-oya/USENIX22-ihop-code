@@ -5,7 +5,6 @@ from scipy.optimize import linear_sum_assignment as hungarian
 
 
 def umemaya_attack(obs, aux, exp_params):
-
     def_params = exp_params.def_params
     ndocs = obs['ndocs']
     token_trace, token_info = process_traces(obs, aux, def_params)
@@ -55,14 +54,14 @@ def _fastPFP(mode, n, n2, matrices, alpha=0, step=0.5, threshold_global=1e-10, t
 
     # n = A.shape[0]
     # n2 = Ap.shape[0]  # np < n
-    lamb = 2*alpha/(1-alpha)
+    lamb = 2 * alpha / (1 - alpha)
 
     X = np.ones((n, n2)) / (n * n2)
     Y = np.zeros((n, n))
     Xold = (threshold_global + 1) + np.ones((n, n2))
     niter_global = 0
 
-    while np.max(np.abs(X-Xold)) > threshold_global and niter_global < maxiter_global:
+    while np.max(np.abs(X - Xold)) > threshold_global and niter_global < maxiter_global:
         if mode == 'mse':
             Y[:n, :n2] = matrices[0] @ X @ matrices[1] + lamb * matrices[2]
         elif mode == 'ml':
@@ -75,7 +74,7 @@ def _fastPFP(mode, n, n2, matrices, alpha=0, step=0.5, threshold_global=1e-10, t
         niter_global += 1
     P = X
     if verbose:
-        print("epsilon1 = {:e}, niters1={:d}".format(np.max(np.abs(X-Xold)), niter_global))
+        print("epsilon1 = {:e}, niters1={:d}".format(np.max(np.abs(X - Xold)), niter_global))
     return P
 
 
@@ -99,7 +98,6 @@ def _greedy_assignment(X):
 
 
 def fastfpf_attack(obs, aux, exp_params):
-
     def_params = exp_params.def_params
     ndocs = obs['ndocs']
     token_trace, token_info = process_traces(obs, aux, def_params)

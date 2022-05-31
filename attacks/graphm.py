@@ -74,7 +74,6 @@ verbose_file=cout s
 
 
 def _run_path_algorithm(m_matrix, m_prime_matrix, c_matrix, alpha):
-
     temp_dir = tempfile.TemporaryDirectory(suffix=None, prefix='graphm_', dir='tmp/')
     # print(temp_dir.name)
 
@@ -123,7 +122,6 @@ def _run_path_algorithm(m_matrix, m_prime_matrix, c_matrix, alpha):
 
 
 def graphm_attack(obs, aux, exp_params):
-
     def_params = exp_params.def_params
     att_params = exp_params.att_params
     naive_flag = att_params['naive']

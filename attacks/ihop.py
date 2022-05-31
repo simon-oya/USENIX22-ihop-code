@@ -6,7 +6,6 @@ from scipy.optimize import linear_sum_assignment as hungarian
 
 
 def get_update_coefficients_functions(token_trace, token_info, aux, obs, exp_params):
-
     def _build_cost_Vol_some_fixed(free_keywords, free_tags, fixed_keywords, fixed_tags):
         cost_vol = -utils.compute_log_binomial_probability_matrix(ndocs, np.diagonal(Vexp)[free_keywords], np.diagonal(Vobs)[free_tags] * ndocs)
         for tag, kw in zip(fixed_tags, fixed_keywords):
@@ -58,6 +57,7 @@ def get_update_coefficients_functions(token_trace, token_info, aux, obs, exp_par
         def compute_cost(free_keywords, free_tags, fixed_keywords, fixed_tags):
             return _build_cost_Vol_some_fixed(free_keywords, free_tags, fixed_keywords, fixed_tags) + \
                    _build_cost_freq_some_fixed(free_keywords, free_tags, fixed_keywords, fixed_tags)
+
         return compute_cost, rep_to_kw
     elif mode == 'Freq':
         return _build_cost_Freq_some_fixed, rep_to_kw
@@ -66,7 +66,6 @@ def get_update_coefficients_functions(token_trace, token_info, aux, obs, exp_par
 
 
 def ihop_attack(obs, aux, exp_params):
-
     token_trace, token_info = process_traces(obs, aux, exp_params.def_params)
 
     compute_coef_matrix, rep_to_kw = get_update_coefficients_functions(token_trace, token_info, aux, obs, exp_params)
@@ -81,8 +80,6 @@ def ihop_attack(obs, aux, exp_params):
     if 'ground_truth_queries' in aux and len(aux['ground_truth_queries']) > 0:
         raise NotImplementedError
         # TODO: this is not part of the IHOP paper, but a future extension.
-        # TODO: map the ground truth info to token-replica format
-        # ground_truth_tokens, ground_truth_reps = [list(val) for val in zip(*obs['known_queries'].items())]
     else:
         ground_truth_tokens, ground_truth_reps = [], []
     unknown_toks = [i for i in range(ntok) if i not in ground_truth_tokens]

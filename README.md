@@ -1,9 +1,11 @@
-This repository contains the code to evaluate query recovery attacks in Searchable Symmetric Encryption (SSE) schemes.
+This repository contains the code to evaluate query recovery attacks in Searchable Symmetric Encryption (SSE) schemes in the paper:
 
-This code can be used to reproduce the results in:
-* Simon Oya and Florian Kerschbaum. *"IHOP: Improved Statistical Query Recovery against Searchable Symmetric Encryption through Quadratic Optimization."* (2022).
+* Simon Oya and Florian Kerschbaum. *"IHOP: Improved Statistical Query Recovery against Searchable Symmetric Encryption through Quadratic Optimization."* (USENIX 2022).
 
-**DISCLAIMER**: the code should work, but there is a lot of room for improvements. There are many "TODO" comments here and there, but I might not have time to make further changes. I have done some code cleaning but I have not re-ran all the experiments in the paper to make sure it works. If you have any questions about the code, you can email Simon Oya (simon.oya@uwaterloo.ca)
+**DISCLAIMER**: the code should work, but it's not very polished/efficient.  
+There are many "TODO" comments here and there, but I might not have time to make further changes. 
+I have done some code cleaning but I have not re-ran all the experiments in the paper to make sure it works. 
+If you have any questions about the code, you can email Simon Oya (simon.oya@uwaterloo.ca)
 
 The code can be used as a framework to run the experiments, or the attack files can be taken independently to incorporate the attacks in other evaluations (see a description of the input variables of the attacks below).
 The overall evaluation framework is the following:
@@ -34,13 +36,13 @@ Their keys and possible values are specified below.
 - ``'dataset'``: specifies the dataset name to load. Now we have ``'enron-full'``, ``'lucene'``, ``'movie-plots'``, ``'articles1'``, and ``'bow-nytimes'`` for the regular experiments. We have ``'wiki_pri'``, ``'wiki_pol'``, ``'wiki_cry'``, ``'wiki_act'``, and ``'wiki_sec'`` for the Wikipedia (Markov) experiments.
 - ``'nkw'``: Number of keywords to take for this experiment (integer).
 - ``'nqr``: Total number of queries that the client sends (integer).
-- ``'ndoc'``: Total number of documents for the client's AND auxiliary datasets (integer). It can also be the string ``'full'``, denoting that all documents are used. (**TODO:** change this so that it's just the client's dataset)
+- ``'ndoc'``: Total number of documents for the client's AND auxiliary datasets (integer). It can also be the string ``'full'``, denoting that all documents are used.
 - ``'freq'``: Source for frequency information
   - ``'file'``: loaded from a file with the dataset name
   - ``'zipf'``: frequencies follow a Zipfian distribution
   - ``'zipfs<int>'``: follows a Zipfian distribution with ``<int>`` as a shift.
-  - ``'none'``: no frequency info (the real frequencies follow a uniform distribution).
-- ``'mode_ds'``: mode for splitting the dataset into the client's and auxiliary's datasets. (**TODO:** I want to change this)
+  - ``'none'``: no frequency info (the real frequencies follow a uniform distribution or are unknown).
+- ``'mode_ds'``: mode for splitting the dataset into the client's and auxiliary's datasets
   - ``'same'``: they are the same.
   - ``'common<int>'``: they adversary's dataset has ``<int>`` percent of documents in common with the client's dataset.
   - ``'split<int>'``: the adversary's dataset is ``<int>`` percent of the dataset, and the remaining is the client's dataset
@@ -91,15 +93,15 @@ All the attacks receive three dictionary inputs: ``obs``, ``aux``, and ``exp_par
       * ``'ap_unique'``: each query is a tuple ``(token_id, documents_retrieved)``, where ``token_id`` is an integer that represents the search pattern leakage, and the ``documents_retrieved`` are a list with the ids of the documents returned for that query. ``'none'`` and ``'clrz'`` defenses use this leakage.
       * ``'ap_osse'``: each query is a list with the ids of the documents returned for that query (search pattern is not leaked). This is the leakage format for ``'osse'`` defense.
       * ``'tok_vol'``: each query is a tuple ``(token_id, volume)``, where ``token_id`` is an integer that represents the search pattern leakage and ``volume`` is the query volume. 
-      This is the model where there is no co-occurrence leakage, so only raw volume matters. ``'pancake'``, ``'seal'`` and ``'ppyy'`` use this leakage. (**TODO:** add SEAL and PPYY!)
+      This is the model where there is no co-occurrence leakage, so only raw volume matters. ``'pancake'``, ``'seal'`` and ``'ppyy'`` use this leakage. (**TODO:** I have not added SEAL and PPYY to this code yet; the codes can be found in the USENIX21 repository for the SAP paper)
 * ``aux``: dictionary with auxiliary information. Some of these keys are optional.
   * ``'dataset'``: dataset with *non-indexed* documents for statistical-based attacks (list of documents, where each document is a list of keyword ids)
   * ``'keywords'``: chosen keyword indices for this run (this determines the alphabet that the adversary sees, only that it's in terms of integers or keyword IDs, not in terms of strings)
   * ``'mode_query'``: this is ``'iid'`` when the user sends iid queries, ``'markov'`` when it sends markov-based queries, and ``'each'`` when it queries each keyword once.
   * ``'frequencies'``: frequency information for statistical-based attacks. If ``'mode_query'=='iid'``, this is an np.array of size ``len(keywords)`` with the frequencies of each keyword. If ``'mode_query'=='markov'``, this is a Markov matrix, and if ``'mode_query'=='each'`` this is ``None``.
     (**TODO:** Ensure this is the case, right now it's a bit clunky as it depends on other general parameters.)
-  * ``'ground_truth_queries'``: correspondence between some queries and their underlying keyword (list with (query_position, kw_id) tuples).
-* ``exp_params``: additional experiment parameters. In the code, we send the whole experiment configuration, cause some attacks might need this information (**TODO:** make this more specific, we might not need everything, some info is already in ``aux``, etc.)
+  * ``'ground_truth_queries'``: correspondence between some queries and their underlying keyword (list with (query_position, kw_id) tuples). (I believe this is not used in the paper.)
+* ``exp_params``: additional experiment parameters. In the code, we send the whole experiment configuration, because some attacks might need this information (**TODO:** make this more specific, we might not need everything, some info is already in ``aux``, etc.)
 
 **TODO:** I want to separate between non-indexed dataset and ground-truth dataset in the auxiliary information. Now the ``'dataset'`` field will have non-indexed documents when the ``'mode_ds'`` is ``'split'`` but ground-truth documents when the split mode is ``'same'`` or ``'common'``.
 

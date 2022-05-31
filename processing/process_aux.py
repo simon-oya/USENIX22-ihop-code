@@ -71,17 +71,6 @@ def get_Fexp_and_mapping(aux, def_params, naive_flag=False):
         return get_Faux(aux), rep_to_kw
 
 
-def get_binary_matrix(dataset, keywords):
-    ## This one only works with the new datasets (index-based)
-    ndocs = len(dataset)
-    nkw_max = 3000
-    binary_database_matrix = np.zeros((ndocs, nkw_max))
-    for i, doc in enumerate(dataset):
-        binary_database_matrix[i, doc] = 1
-    binary_database_matrix = binary_database_matrix[:, keywords]
-    return binary_database_matrix  # TODO: add this to the code after the experiments?
-
-
 def get_Vaux(aux):
     dataset = aux['dataset']
     ndocs = len(dataset)
@@ -118,7 +107,6 @@ def get_Vexp(aux, def_params, naive_flag=False):
             if keyword in keywords:
                 i_kw = keywords.index(keyword)
                 binary_database_matrix[i_doc, i_kw] = 1
-
     epsilon = 0  # Value to control that there are no zero elements
     if naive_flag or def_params['name'] in ('none',):
         Vaux = (np.matmul(binary_database_matrix.T, binary_database_matrix) + epsilon) / (ndocs + 2 * epsilon)

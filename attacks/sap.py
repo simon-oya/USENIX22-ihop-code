@@ -24,7 +24,6 @@ def _build_cost_freq(faux, fobs, nqr):
 
 
 def _build_cost_vol(vaux, vobs, ndocs_obs, def_params, naive_flag=False):
-
     nkw = len(vaux)
     counts_obs = np.array([vol * ndocs_obs for vol in vobs])
 
@@ -50,7 +49,6 @@ def _build_cost_vol(vaux, vobs, ndocs_obs, def_params, naive_flag=False):
 
 
 def sap_attack(obs, aux, exp_params):
-
     att_params = exp_params.att_params
     naive_flag = att_params['naive']
     alpha = att_params['alpha']
@@ -74,4 +72,3 @@ def sap_attack(obs, aux, exp_params):
     keyword_predictions_for_each_query = [keyword_predictions_for_each_token[token] for token in token_trace]
 
     return keyword_predictions_for_each_query
-

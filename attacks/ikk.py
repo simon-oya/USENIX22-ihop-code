@@ -5,7 +5,6 @@ from processing.process_aux import get_Vexp
 
 def _run_simmulated_annealing(remaining_tags, remaining_keywords, initial_state, m_matrix, m_prime_matrix, unique_flag,
                               initial_temp=200, cooling_rate=0.999, reject_threshold=1500):
-
     def compute_cost(state, m_matrix, m_prime_matrix):
         total_cost = np.sum((m_matrix[np.ix_(state, state)] - m_prime_matrix) ** 2)
         return total_cost

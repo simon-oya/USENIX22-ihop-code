@@ -87,7 +87,6 @@ def add_to_manager3():
 def add_to_manager4():
     """Oct 2021: new datasets, new processing"""
 
-
     manager_filename = 'manager_data4.pkl'
     if not os.path.exists(manager_filename):
         manager = Manager()
@@ -138,7 +137,6 @@ def add_to_manager4():
                 for attack_name, attack_params in attack_list:
                     exp_params.set_attack_params(attack_name, **attack_params)
                     manager.initialize_or_add_runs(exp_params, target_runs=30)
-
 
     print("Saving ResultsManager...")
     with open(manager_filename, 'wb') as f:
@@ -259,8 +257,7 @@ def add_to_manager_iid_queries(ndoc_cli_list=(20_000,), ndoc_adv_list=(10000,), 
 
 def add_to_manager_ihop_niters(ndoc_cli_list=(20_000,), ndoc_adv_list=(10000,), nkw=500, nqr=500,
                                pfree_list=(0.1, 0.25, 0.5, 0.75),
-                               dataset='all',  manager_number=7):
-
+                               dataset='all', manager_number=7):
     manager_filename = 'manager_data{:d}.pkl'.format(manager_number)
     if not os.path.exists(manager_filename):
         manager = Manager()
@@ -293,6 +290,7 @@ def add_to_manager_e0():
     add_to_manager_ihop_niters(ndoc_cli_list=(20_000,), ndoc_adv_list=(5000,), nkw=500, nqr=500,
                                pfree_list=(0.1, 0.25, 0.5, 0.75), dataset='all', manager_number=8)
 
+
 def add_to_manager_e10():
     add_to_manager_no_def(ndoc_cli_list=(20_000,), ndoc_adv_list=(500, 1000, 2000, 3000, 5000, 10000), nkw_list=(500,), manager_number=6)
 
@@ -316,8 +314,6 @@ def add_to_manager_e2():
                                fpr_list=(), dataset='all', attacks='fast', defense_list=('none',), manager_number=7)
     # add_to_manager_iid_queries(ndoc_cli_list=(20_000,), ndoc_adv_list=(10000,), nkw_list=(3000,), nqr_list=(500,), tpr_list=(0.9999,),
     #                            fpr_list=(0.01, 0.02, 0.05), dataset='all', attacks='fast', manager_number=7)
-
-
 
 
 if __name__ == "__main__":
